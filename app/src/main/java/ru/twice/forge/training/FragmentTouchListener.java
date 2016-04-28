@@ -5,3 +5,9 @@ package ru.twice.forge.training;
  */
 public class FragmentTouchListener {
 }
+}grquefubvhdjvasd
+vadskfjhvdisahflvjdsl
+        vadsughvlajvklaj
+avo;ahldkvhakl
+alvahlskdvhakl
+        afvklahldvhalk
