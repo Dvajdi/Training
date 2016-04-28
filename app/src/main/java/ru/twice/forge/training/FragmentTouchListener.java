@@ -4,4 +4,6 @@ package ru.twice.forge.training;
  * Created by twice on 28.04.16.
  */
 public class FragmentTouchListener {
-}ihofviha;sdkfvjah;ldfkjh;bvakjdlhfdhl;dfv
+}ihofvi
+        ha;sdkfvjah;ldfkjh;bvakjdlhfdhl;dfvljclhviaejdbfvkl;
+        aejbvkl
