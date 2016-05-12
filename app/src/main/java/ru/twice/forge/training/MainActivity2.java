@@ -77,7 +77,7 @@ public class MainActivity2 extends AppCompatActivity {
      * background will be visible. That is rarely an desired effect.
      */
     private void setUpItemTouchHelper() {
-
+        //создание и присваивание SwipeListener
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             // we want to cache these and not allocate anything repeatedly in the onChildDraw method
