@@ -87,9 +87,11 @@ public class MainActivity2 extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(Color.alpha(0));
+
                 xMark = ContextCompat.getDrawable(MainActivity2.this, R.drawable.ic_clear_24dp);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMark.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+
                 xMarkMargin = (int) MainActivity2.this.getResources().getDimension(R.dimen.ic_clear_margin);
                 initiated = true;
             }
@@ -100,6 +102,7 @@ public class MainActivity2 extends AppCompatActivity {
                 return false;
             }
 
+
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
@@ -109,6 +112,7 @@ public class MainActivity2 extends AppCompatActivity {
                 }
                 return super.getSwipeDirs(recyclerView, viewHolder);
             }
+
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
@@ -122,6 +126,7 @@ public class MainActivity2 extends AppCompatActivity {
                 }
             }
 
+            //этот блок для рисования рисунка в месте сдвига нашей строчки с указанием координат
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
@@ -137,6 +142,7 @@ public class MainActivity2 extends AppCompatActivity {
                 }
 
                 // draw red background
+
                 background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 background.draw(c);
 
@@ -166,83 +172,8 @@ public class MainActivity2 extends AppCompatActivity {
      * after an item is removed.
      */
     private void setUpAnimationDecoratorHelper() {
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+        new RecyclerDecorator(mRecyclerView);
 
-            // we want to cache this and not allocate anything repeatedly in the onDraw method
-            Drawable background;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                initiated = true;
-            }
-
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
-
-                // only if animation is in progress
-                if (parent.getItemAnimator().isRunning()) {
-
-                    // some items might be animating down and some items might be animating up to close the gap left by the removed item
-                    // this is not exclusive, both movement can be happening at the same time
-                    // to reproduce this leave just enough items so the first one and the last one would be just a little off screen
-                    // then remove one from the middle
-
-                    // find first child with translationY > 0
-                    // and last one with translationY < 0
-                    // we're after a rect that is not covered in recycler-view views at this point in time
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-
-                    // this is fixed
-                    int left = 0;
-                    int right = parent.getWidth();
-
-                    // this we need to find out
-                    int top = 0;
-                    int bottom = 0;
-
-                    // find relevant translating views
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-                        if (child.getTranslationY() < 0) {
-                            // view is coming down
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0) {
-                            // view is coming up
-                            if (firstViewComingUp == null) {
-                                firstViewComingUp = child;
-                            }
-                        }
-                    }
-
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        // views are coming down AND going up to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        // views are going down to fill the void
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        // views are coming up to fill the void
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    }
-
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(c);
-
-                }
-                super.onDraw(c, parent, state);
-            }
-
-        });
     }
 
     /**
